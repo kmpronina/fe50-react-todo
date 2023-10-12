@@ -49,7 +49,6 @@ const ToDoItem: React.FC<Props> = (props) => {
       </Label>
       <div>
         <Button onClick={() => deleteThisTask(task.id)}>Delete</Button>
-        <Button>Edit</Button>
       </div>
     </ToDoItemStyled>
   );

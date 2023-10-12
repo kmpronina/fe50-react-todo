@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { TasksContext } from '../store/context.ts';
 import { Task } from '../../models/Task.ts';
 import { ReturnDeletedTasksButtonStyled } from './ReturnDeletedTasksButtonStyled.ts';
@@ -11,14 +11,13 @@ interface Props {
 
 export const ReturnDeletedTasksButton: React.FC<Props> = (props) => {
   const { children, disable, onClick } = props;
-  const { tasks, deletedTasks, setDeletedTask } = useContext(TasksContext);
-
-  const handleClick = () => {
-    console.log(deletedTasks);
-  };
+  const { deletedTasks } = useContext(TasksContext);
 
   return (
-    <ReturnDeletedTasksButtonStyled onClick={handleClick} disabled={disable}>
+    <ReturnDeletedTasksButtonStyled
+      onClick={onClick}
+      disable={!deletedTasks.length ? false : true}
+    >
       {children}
     </ReturnDeletedTasksButtonStyled>
   );

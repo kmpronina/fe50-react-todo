@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Task } from './models/Task.tsx';
 import { TasksContext } from '../../components/store/context.ts';
 import Header from '../../containers/Header/Header.tsx';
@@ -14,11 +14,18 @@ const ToDo = () => {
   const handleCreateNewTask = (newTask: Task) => {
     setTasks([...tasks, newTask]);
   };
-
   const handleChangeActiveId = (newId: number | undefined) => {
     setActiveTaskId(newId);
   };
-  const [deletedTasks, setDeletedTasks] = useState<Task[]>([]);
+  const { deletedTasks } = useContext(TasksContext);
+  const returnDeletedTasks = () => {
+    if (deletedTasks.length) {
+      const index = deletedTasks.length;
+      setTasks([...tasks, deletedTasks[index - 1]]);
+      deletedTasks.pop();
+    }
+  };
+
   return (
     <>
       <Header />
@@ -33,8 +40,8 @@ const ToDo = () => {
         <ToDoBlueprint onCreateTask={handleCreateNewTask} />
 
         <ToDoList tasks={tasks} />
-        <ReturnDeletedTasksButton>
-          Return <br /> Deleted <br /> Tasks
+        <ReturnDeletedTasksButton onClick={returnDeletedTasks}>
+          Return <br /> last deleted <br /> task
         </ReturnDeletedTasksButton>
       </TasksContext.Provider>
     </>
