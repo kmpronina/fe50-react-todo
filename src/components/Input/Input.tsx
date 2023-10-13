@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { TasksContext } from '../../components/store/context.ts';
+import React, { BaseSyntheticEvent, useState } from 'react';
+// import { TasksContext } from '../../components/store/context.ts';
 import { InputStyled, InputWrapper } from './InputStyled.ts';
 
 interface Props {
   onChange: (newValue: string) => void;
 }
 
-const Input: React.FC<Props> = (props) => {
+export const Input: React.FC<Props> = (props) => {
   const { onChange } = props;
   // const { setActiveTaskId } = useContext(TasksContext);
 
@@ -26,5 +26,3 @@ const Input: React.FC<Props> = (props) => {
     </InputWrapper>
   );
 };
-
-export default Input;

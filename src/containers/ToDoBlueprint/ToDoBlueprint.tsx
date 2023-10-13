@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Task } from '../../../models/Task.ts';
 import { ToDoBlueprintStyled } from './ToDoBluprintStyled.ts';
 import { Button } from '../../components/Button/Button.tsx';
-import Input from '../../components/Input/Input.tsx';
-import { TasksContext } from '../../components/store/context';
+import { Input } from '../../components/Input/Input.tsx';
+// import { TasksContext } from '../../components/store/context';
 
 interface Props {
   onCreateTask: (newTask: Task) => void;
