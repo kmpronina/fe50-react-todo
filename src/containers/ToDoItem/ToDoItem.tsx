@@ -2,8 +2,9 @@ import React, { useContext, useState } from 'react';
 import { Button } from '../../components/Button/Button.tsx';
 import { TasksContext } from '../../components/store/context.ts';
 import { Task } from '../../models/Task.ts';
-import { ToDoItemStyled, Text, CheckBox, Label } from './ToDoItemStyled.ts';
+import { Text, Label } from './ToDoItemStyled.ts';
 import { Input } from '../../components/Input/Input.tsx';
+import { Paper, Checkbox, FormControlLabel } from '@mui/material';
 
 interface Props {
   task: Task;
@@ -11,12 +12,13 @@ interface Props {
 }
 
 const ToDoItem: React.FC<Props> = (props) => {
-  const { task, onSave } = props;
+  const { task } = props;
   const { tasks, activeTaskId, setActiveTaskId, deletedTasks } =
     useContext(TasksContext);
-  const [completed, setCompleted] = useState(false);
+  const [completed, setCompleted] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(task.text);
+
   const handleClickTask = () => {
     setActiveTaskId(task.id);
   };
@@ -48,7 +50,8 @@ const ToDoItem: React.FC<Props> = (props) => {
   };
 
   return (
-    <ToDoItemStyled
+    <Paper
+      sx={{ padding: '15px', width: '350px', marginBottom: '10px' }}
       onClick={handleClickTask}
       style={{
         border: `1px solid ${activeTaskId === task.id ? '#002D62' : '#72A0C1'}`,
@@ -67,18 +70,23 @@ const ToDoItem: React.FC<Props> = (props) => {
         <Text>{`${editedText ? editedText : task.text}`}</Text>
       )}
       <Label for="complete">
-        Complete
-        <CheckBox
+        <FormControlLabel
+          control={
+            <Checkbox defaultChecked onClick={() => changeCompletedStatus()} />
+          }
+          label="Complete"
+        />
+        {/* <CheckBox
           type="checkbox"
           name="complete"
           onClick={() => changeCompletedStatus()}
-        />
+        /> */}
       </Label>
       <div>
         <Button onClick={() => deleteThisTask(task.id)}>Delete</Button>
         <Button onClick={() => editThisTask(task.id)}>Edit</Button>
       </div>
-    </ToDoItemStyled>
+    </Paper>
   );
 };
 

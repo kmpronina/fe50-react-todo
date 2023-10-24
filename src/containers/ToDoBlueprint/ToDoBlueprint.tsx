@@ -13,7 +13,7 @@ interface Props {
 const ToDoBlueprint: React.FC<Props> = (props) => {
   const { onCreateTask } = props;
 
-  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+  // const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
 
   const handleChangeInput = (newValue: string) => {
@@ -29,16 +29,14 @@ const ToDoBlueprint: React.FC<Props> = (props) => {
     onCreateTask(newTask);
   };
 
-  useEffect(() => {
-    setIsButtonDisabled(!inputValue.length);
-  }, [inputValue]);
+  // useEffect(() => {
+  //   setIsButtonDisabled(!inputValue.length);
+  // }, [inputValue]);
 
   return (
     <ToDoBlueprintStyled>
       <Input placeholder={'Your title'} onChange={handleChangeInput} />
-      <Button onClick={handleClick} disable={isButtonDisabled}>
-        Submit
-      </Button>
+      <Button onClick={handleClick}>Submit</Button>
     </ToDoBlueprintStyled>
   );
 };

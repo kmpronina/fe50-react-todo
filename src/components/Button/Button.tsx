@@ -1,5 +1,6 @@
 import React from 'react';
-import { ButtonStyled } from './ButtonStyled.ts';
+// import { ButtonStyled } from './ButtonStyled.ts';
+import { Button as MuiButton } from '@mui/material';
 
 interface Props {
   onClick: () => void;
@@ -15,8 +16,8 @@ export const Button: React.FC<Props> = (props) => {
   };
 
   return (
-    <ButtonStyled onClick={handleClick} disabled={disable}>
+    <MuiButton onClick={handleClick} disabled={disable}>
       {children}
-    </ButtonStyled>
+    </MuiButton>
   );
 };
