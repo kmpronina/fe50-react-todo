@@ -5,7 +5,8 @@ interface IProps {
 }
 
 export const InputWrapper = styled.div`
-  margin-bottom: 1rem;
+  width: 75%;
+  margin: auto;
 `;
 
 export const InputStyled = styled.input<IProps>`
