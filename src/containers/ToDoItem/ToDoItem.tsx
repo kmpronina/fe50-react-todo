@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button } from '../../components/Button/Button.tsx';
-import { TasksContext } from '../../components/store/context.ts';
+import { TasksContext } from '../../store/context.ts';
 import { Task } from '../../models/Task.ts';
 import { Text, Label } from './ToDoItemStyled.ts';
 import { Input } from '../../components/Input/Input.tsx';

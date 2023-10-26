@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Task } from './models/Task.tsx';
-import { TasksContext } from '../../components/store/context.ts';
+import { TasksContext } from '../../store/context.ts';
 import Header from '../../containers/Header/Header.tsx';
 import ToDoBlueprint from '../../containers/ToDoBlueprint/ToDoBlueprint.tsx';
 import ToDoList from '../../containers/ToDoLIst/ToDoList.tsx';

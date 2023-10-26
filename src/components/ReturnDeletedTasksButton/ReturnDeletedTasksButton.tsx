@@ -1,6 +1,6 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { TasksContext } from '../store/context.ts';
-import { Task } from '../../models/Task.ts';
+import React, { ReactNode, useContext } from 'react';
+import { TasksContext } from '../../store/context.ts';
+// import { Task } from '../../models/Task.ts';
 import { ReturnDeletedTasksButtonStyled } from './ReturnDeletedTasksButtonStyled.ts';
 
 interface Props {
