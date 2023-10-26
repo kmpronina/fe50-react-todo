@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { Task } from '../../../models/Task.ts';
 import { ToDoBlueprintStyled } from './ToDoBluprintStyled.ts';
