@@ -1,6 +1,10 @@
 import { Box, Button } from '@mui/material';
 import React, { useRef } from 'react';
 import Header from '../../containers/Header/Header.tsx';
+import AlbumsTable from '../../containers/AlbumTable/AlbumTable.tsx';
+import Dialog from '../../containers/MyDialog/MyDialog.tsx';
+import MyModal from '../../containers/MyModal/MyModal.tsx';
+import MyAutocompelte from '../../components/MyAutocomplete/MyAutocomplete.tsx';
 
 const Home = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -43,12 +47,15 @@ const Home = () => {
           <Button variant={'outlined'} onClick={handleStartInterval}>
             start interval
           </Button>
-          {/*<button onClick={handleStartInterval}>start interval</button>*/}
           <Button variant={'outlined'} onClick={handleStopInterval}>
             stop interval
           </Button>
         </Box>
       </Box>
+      <Dialog />
+      <MyModal />
+      <MyAutocompelte />
+      <AlbumsTable />
     </>
   );
 };

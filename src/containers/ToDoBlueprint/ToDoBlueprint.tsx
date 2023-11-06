@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { Task } from '../../../models/Task.ts';
 import { ToDoBlueprintStyled } from './ToDoBluprintStyled.ts';
@@ -25,6 +25,7 @@ const ToDoBlueprint: React.FC<Props> = (props) => {
       text: inputValue,
       id: new Date().valueOf(),
       completed: false,
+      userName: undefined,
     };
     onCreateTask(newTask);
   };
