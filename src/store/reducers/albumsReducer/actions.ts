@@ -1,4 +1,4 @@
-import { Album } from '../../../models/Album.ts';
+import { Album } from '../../../models/Album';
 import { AppDispatchType } from '../../store';
 import { AlbumReducerEnum } from './actionTypes.ts';
 import { getAlbums } from '../../../api/services/albumsService.ts';

@@ -27,7 +27,6 @@ const MyAutocompelte: React.FC<Props> = (props) => {
 
   return (
     <Box sx={{ padding: '20px' }}>
-      <Button onClick={handleClick}>Albums from autocomplete</Button>;
       <Autocomplete
         sx={{ width: '500px' }}
         options={albums}

@@ -25,6 +25,7 @@ const ToDoBlueprint: React.FC<Props> = (props) => {
       text: inputValue,
       id: new Date().valueOf(),
       completed: false,
+      userName: undefined,
     };
     onCreateTask(newTask);
   };

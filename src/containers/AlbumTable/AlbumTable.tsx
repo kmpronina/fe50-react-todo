@@ -94,15 +94,15 @@ const AlbumsTable: React.FC<Props> = (props) => {
       <Button onClick={handleAlbumsConsole}>Albums from table</Button>
       <Table>
         <TableHead>
-          <TableRow>
-            <TableCell>title</TableCell>
+          <TableRow sx={{ backgroundColor: 'lightgray' }}>
+            <TableCell>Title</TableCell>
             <TableCell
               onClick={() =>
                 handleChangeSortDirection(TableCellForSortEnum.userId)
               }
             >
               <Box sx={{ display: 'flex' }}>
-                userId
+                UserId
                 <Box
                   sx={{
                     opacity: sortField === TableCellForSortEnum.userId ? 1 : 0,
@@ -119,7 +119,7 @@ const AlbumsTable: React.FC<Props> = (props) => {
               onClick={() => handleChangeSortDirection(TableCellForSortEnum.id)}
             >
               <Box sx={{ display: 'flex' }}>
-                id
+                Id
                 <Box
                   sx={{
                     opacity: sortField === TableCellForSortEnum.id ? 1 : 0,

@@ -1,7 +1,7 @@
 import { Reducer } from '@reduxjs/toolkit';
 import { Album } from '../../../models/Album.ts';
 import { AlbumReducerEnum } from './actionTypes.ts';
-import { getAlbums } from '../../../api/services/albumsService.ts';
+// import { getAlbums } from '../../../api/services/albumsService.ts';
 
 type AlbumReducerType = {
   albums: Album[];
@@ -21,7 +21,6 @@ const albumReducer: Reducer<AlbumReducerType> = (
       return { ...state, albums: action.albums };
 
     default:
-      console.log('hello');
       return { ...state };
   }
 };
