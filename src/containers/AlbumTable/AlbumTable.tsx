@@ -46,7 +46,6 @@ const AlbumsTable: React.FC<Props> = (props) => {
     setIsLoading(true);
     const getData = async () => {
       const data = await getAlbums();
-      console.log(data, 'data');
       dispatch(setAlbumToStore(data));
       setIsLoading(false);
     };

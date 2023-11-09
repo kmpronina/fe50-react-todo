@@ -12,21 +12,20 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Autocomplete,
   Select,
-  useRadioGroup,
   MenuItem,
-  Box,
   Typography,
   SelectChangeEvent,
   InputLabel,
   FormControl,
   Avatar,
 } from '@mui/material';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { useAppSelector, useAppDispatch } from '../../store/store.ts';
 import { setTasks } from '../../store/reducers/taskReducer/index.ts';
 import { getUsersDataAction } from '../../store/reducers/usersReducer/actions.ts';
 import { User } from '../../models/User.ts';
+import { UserName } from '../../components/UserName/UserName.tsx';
 
 interface Props {
   task: Task;
@@ -43,8 +42,6 @@ const ToDoItem: React.FC<Props> = (props) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newTaksText, setNewTaksText] = useState<string>('');
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
-  // const [addedUser, setAddedUser] = useState<string | null>(null);
-  // const [taskIdToAddUser, setTaskIdToAddUser] = useState<number | null>(null);
   const [addingUserTaskId, setAddingUserTaskId] = useState<number | null>(null);
   const [showSelect, setShowSelect] = useState<boolean>(false);
   const [newUser, setNewUser] = useState<string>('');
@@ -69,17 +66,16 @@ const ToDoItem: React.FC<Props> = (props) => {
     );
   };
 
-  const deleteThisTask = (id: number) => {
-    console.log(users);
+  const deleteThisTask = (taskId: number) => {
     dispatch(
-      setTasks(tasks.filter((taskItem: Task) => taskItem.id !== task.id))
+      setTasks(tasks.filter((taskItem: Task) => taskItem.id !== taskId))
     );
   };
 
   const handleOpenEditDialog = (taskId: number) => {
     setIsEditing(true);
     setEditingTaskId(taskId);
-    setNewTaksText(tasks.find((task: Task) => task.id === taskId)?.text || '');
+    setNewTaksText(tasks.find((task: Task) => task.id === taskId)?.label || '');
   };
 
   const handleChangeTaskText = (e: BaseSyntheticEvent) => {
@@ -91,7 +87,7 @@ const ToDoItem: React.FC<Props> = (props) => {
     dispatch(
       setTasks(
         newTasks.map((task) =>
-          task.id === editingTaskId ? { ...task, text: newTaksText } : task
+          task.id === editingTaskId ? { ...task, label: newTaksText } : task
         )
       )
     );
@@ -117,35 +113,6 @@ const ToDoItem: React.FC<Props> = (props) => {
     setShowSelect(false);
   };
 
-  function stringToColor(string: string) {
-    let hash = 0;
-    let i;
-
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = '#';
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    /* eslint-enable no-bitwise */
-
-    return color;
-  }
-
-  function stringAvatar(name: string) {
-    return {
-      sx: {
-        bgcolor: stringToColor(name),
-      },
-      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
-    };
-  }
-
   return (
     <Paper
       sx={{ padding: '15px', width: '350px', marginBottom: '10px' }}
@@ -154,7 +121,7 @@ const ToDoItem: React.FC<Props> = (props) => {
       //   border: `1px solid ${activeTaskId === task.id ? '#002D62' : '#72A0C1'}`,
       // }}
     >
-      <Text>{`${task.text}`}</Text>
+      <Text>{`${task.label}`}</Text>
       <Label for="complete">
         <FormControlLabel
           control={
@@ -171,22 +138,23 @@ const ToDoItem: React.FC<Props> = (props) => {
         {task.userName === undefined ? (
           <Typography
             sx={{
-              padding: '5px',
               width: '300px',
               height: '56px',
-              border: '1px, solid, gray',
+              display: 'flex',
+              flexDiraction: 'row',
+              alignItems: 'center',
+              gap: '5px',
+              cursor: 'pointer',
             }}
             onClick={() => handleShowSelectUser(task.id)}
           >
-            {' '}
-            <Avatar {...stringAvatar('X X')} />
+            <Avatar sx={{ bgcolor: 'gray' }}>
+              <PersonAddAlt1Icon />
+            </Avatar>
             Choose an executor
           </Typography>
         ) : (
-          <Text>
-            <Avatar {...stringAvatar(`${task.userName}`)} />
-            {`${task.userName}`}
-          </Text>
+          <UserName name={task.userName} />
         )}
         {showSelect && (
           <FormControl fullWidth>
@@ -198,7 +166,7 @@ const ToDoItem: React.FC<Props> = (props) => {
               label="User"
               onChange={handleChooseUserToTask}
             >
-              {users.map((user) => (
+              {users.map((user: User) => (
                 <MenuItem value={user.label} key={user.id}>
                   {user.label}
                 </MenuItem>

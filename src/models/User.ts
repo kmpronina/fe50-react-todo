@@ -4,6 +4,12 @@ export type User = {
   id: number;
   label: string;
   tasks: Task[];
+  username: string;
+  email: string;
+  address: AdressType;
+  phone: string;
+  website: string;
+  company: CompanyType;
 };
 
 export type UserFromPlaceholder = {

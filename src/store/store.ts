@@ -9,9 +9,15 @@ import albumReducer from './reducers/albumsReducer/index.ts';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import taskReducer from './reducers/taskReducer/index.ts';
 import usersReducer from './reducers/usersReducer/index.ts';
+import postReducer from './reducers/postReducer/index.ts';
 // import { GetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
 
-const appReducer = combineReducers({ albumReducer, taskReducer, usersReducer });
+const appReducer = combineReducers({
+  albumReducer,
+  taskReducer,
+  usersReducer,
+  postReducer,
+});
 
 export const store = configureStore({
   reducer: appReducer,

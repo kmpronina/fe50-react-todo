@@ -1,6 +1,7 @@
 export type Task = {
   id: number;
-  text: string;
+  label: string;
   completed: boolean;
   userName: string | undefined;
+  userId: number | undefined;
 };
