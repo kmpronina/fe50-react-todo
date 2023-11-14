@@ -10,6 +10,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import taskReducer from './reducers/taskReducer/index.ts';
 import usersReducer from './reducers/usersReducer/index.ts';
 import postReducer from './reducers/postReducer/index.ts';
+import searchValueReducer from './reducers/searchValueReducer/index.ts';
 // import { GetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
 
 const appReducer = combineReducers({
@@ -17,6 +18,7 @@ const appReducer = combineReducers({
   taskReducer,
   usersReducer,
   postReducer,
+  searchValueReducer,
 });
 
 export const store = configureStore({

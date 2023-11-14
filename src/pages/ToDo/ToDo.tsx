@@ -2,11 +2,9 @@ import React, { BaseSyntheticEvent, useEffect, useState } from 'react';
 import { Task } from './models/Task.ts';
 import { User } from './models/User.ts';
 import { Post } from './models/Post.ts';
-// import { TasksContext } from '../../store/context.ts';
 import Header from '../../containers/Header/Header.tsx';
 import ToDoBlueprint from '../../containers/ToDoBlueprint/ToDoBlueprint.tsx';
 import ToDoList from '../../containers/ToDoLIst/ToDoList.tsx';
-// import { ReturnDeletedTasksButton } from '../../components/ReturnDeletedTasksButton/ReturnDeletedTasksButton.tsx';
 import { useAppDispatch, useAppSelector } from '../../store/store.ts';
 import { getUsersDataAction } from '../../store/reducers/usersReducer/actions.ts';
 import { getPostsDataAction } from '../../store/reducers/postReducer/actions.ts';
@@ -15,30 +13,14 @@ import { Box, Button, List, Paper, ListItem, TextField } from '@mui/material';
 import PostList from '../../containers/PostList/PostList.tsx';
 import { UserName } from '../../components/UserName/UserName.tsx';
 import { UserCard } from '../../containers/UserCard/UserCard.tsx';
+import { useDebounce } from '../../hooks/useDebounce.tsx';
+import { setSearchValueToStore } from '../../store/reducers/searchValueReducer/actions.ts';
 
 const ToDo = () => {
-  // const [tasks, setTasks] = useState<Task[]>([]);
-
-  // const [activeTaskId, setActiveTaskId] = useState<number | undefined>(
-  //   undefined
-  // );
-  // const handleCreateNewTask = (newTask: Task) => {
-  //   setTasks([...tasks, newTask]);
-  // };
-  // const handleChangeActiveId = (newId: number | undefined) => {
-  //   setActiveTaskId(newId);
-  // };
-  // const { deletedTasks } = useContext(TasksContext);
-  // const returnDeletedTasks = () => {
-  //   if (deletedTasks.length) {
-  //     const index = deletedTasks.length;
-  //     setTasks([...tasks, deletedTasks[index - 1]]);
-  //     deletedTasks.pop();
-  //   }
-  // };
   const { tasks } = useAppSelector((state) => state.taskReducer);
   const { users } = useAppSelector((state) => state.usersReducer);
   const { posts } = useAppSelector((state) => state.postReducer);
+  const { searchValue } = useAppSelector((state) => state.searchValueReducer);
 
   const dispatch = useAppDispatch();
 
@@ -51,30 +33,40 @@ const ToDo = () => {
   const [selectedUserId, setSelectedUserId] = useState<number | undefined>(
     undefined
   );
-  const [searcAllLabelsValue, setSearcAllLabelsValue] = useState<
-    string | undefined
-  >(undefined);
+  const [searcAllLabelsValue, setSearcAllLabelsValue] = useState<string>('');
 
   useEffect(() => {
     dispatch(getUsersDataAction());
     dispatch(getPostsDataAction());
   }, []);
 
-  const handleCreateNewTask = (newTask: Task) => {
+  const debouncedValue = useDebounce(searcAllLabelsValue);
+
+  useEffect(() => {
+    dispatch(setSearchValueToStore(debouncedValue));
+  }, [debouncedValue]);
+
+  const resetInteraction = () => {
     setSearcAllLabelsValue('');
     setUserSelected(false);
     setShowExecutorlessTasks(false);
     setSelectedUserLabel(undefined);
     setSelectedUserId(undefined);
-    dispatch(setTasks([...tasks, newTask]));
+  };
+
+  const handleCreateNewTask = (newTask: Task) => {
+    resetInteraction();
+    dispatch(setTasks([newTask, ...tasks]));
   };
 
   const showCurrentTasks = () => {
     console.log(tasks);
+    console.log(debouncedValue, 'debouncedValue');
+    console.log(searchValue, 'searchValue');
   };
 
   const handleShowExecutorlessTask = () => {
-    setShowExecutorlessTasks(!showExecutorlessTasks);
+    setShowExecutorlessTasks((prevstate) => !prevstate);
     setSearcAllLabelsValue('');
     setUserSelected(false);
     setSelectedUserLabel(undefined);
@@ -84,47 +76,20 @@ const ToDo = () => {
   const handleSelectUser = (userLabel: string, userId: number) => {
     console.log('selected user label', userLabel);
     setSelectedUserId(userId);
-    // if (userLabel === selectedUserLabel) {
-    //   setUserSelected(false);
-    //   setShowExecutorlessTasks(false);
-    //   setSelectedUserLabel(undefined);
-    //   setSelectedUserId(undefined);
-    // } else {
     setSearcAllLabelsValue('');
     setSelectedUserLabel(userLabel);
     setShowExecutorlessTasks(false);
     setUserSelected(true);
-    // }
-  };
-
-  const handleCloseSelectedUser = () => {
-    setSearcAllLabelsValue('');
-    setUserSelected(false);
-    setShowExecutorlessTasks(false);
-    setSelectedUserLabel(undefined);
-    setSelectedUserId(undefined);
   };
 
   const handleSearcAllLabels = (event: BaseSyntheticEvent) => {
-    setUserSelected(false);
-    setShowExecutorlessTasks(false);
-    setSelectedUserLabel(undefined);
-    setSelectedUserId(undefined);
+    resetInteraction();
     setSearcAllLabelsValue(event.target.value);
-    console.log('search value for all labels', searcAllLabelsValue);
   };
 
   return (
     <>
       <Header />
-      {/* <TasksContext.Provider
-        value={{
-          tasks: tasks,
-          activeTaskId: activeTaskId,
-          setActiveTaskId: handleChangeActiveId,
-          deletedTasks: deletedTasks,
-        }}
-      > */}
       <ToDoBlueprint onCreateTask={handleCreateNewTask} />
       <Box sx={{ padding: '15px' }}>
         <TextField
@@ -161,26 +126,19 @@ const ToDo = () => {
             alignItems: 'start',
           }}
         >
-          {searcAllLabelsValue ? (
-            <ToDoList
-              tasks={tasks.filter(
-                (task: Task) => task.label === searcAllLabelsValue
-              )}
-            />
-          ) : showExecutorlessTasks ? (
-            <ToDoList
-              tasks={tasks.filter((task: Task) => task.userName === undefined)}
-            />
-          ) : userSelected ? (
-            <ToDoList
-              tasks={tasks.filter(
-                (task: Task) => task.userName === selectedUserLabel
-              )}
-            />
-          ) : (
-            <ToDoList tasks={tasks} />
-          )}
-
+          <ToDoList
+            tasks={tasks.filter((task: Task) =>
+              debouncedValue
+                ? task.label
+                    .toLowerCase()
+                    .includes(debouncedValue.toLowerCase())
+                : showExecutorlessTasks
+                ? task.userName === undefined
+                : userSelected
+                ? task.userName === selectedUserLabel
+                : tasks
+            )}
+          />
           <Box
             sx={{
               width: '45%',
@@ -196,10 +154,14 @@ const ToDo = () => {
                 gap: '10px',
               }}
             >
-              {searcAllLabelsValue ? (
+              {debouncedValue ? (
                 <List>
                   {users
-                    .filter((user: User) => user.label === searcAllLabelsValue)
+                    .filter((user: User) =>
+                      user.label
+                        .toLowerCase()
+                        .includes(debouncedValue.toLowerCase())
+                    )
                     .map((user: User) => (
                       <ListItem
                         sx={{
@@ -208,8 +170,6 @@ const ToDo = () => {
                           alignItems: 'center',
                           gap: '5px',
                           cursor: 'pointer',
-                          // backgroundColor:
-                          //   user.label === selecterUserLabel ? '#f0f8ff' : '',
                         }}
                         key={user.id}
                         onClick={() => handleSelectUser(user.label, user.id)}
@@ -228,8 +188,6 @@ const ToDo = () => {
                         alignItems: 'center',
                         gap: '5px',
                         cursor: 'pointer',
-                        // backgroundColor:
-                        //   user.label === selecterUserLabel ? '#f0f8ff' : '',
                       }}
                       key={user.id}
                       onClick={() => handleSelectUser(user.label, user.id)}
@@ -239,7 +197,7 @@ const ToDo = () => {
                   ))}
                 </List>
               ) : (
-                <Box sx={{ padding: '10px' }} onClick={handleCloseSelectedUser}>
+                <Box sx={{ padding: '10px' }} onClick={resetInteraction}>
                   <UserName
                     name={
                       users.find((user: User) => user.id === selectedUserId)
@@ -255,27 +213,21 @@ const ToDo = () => {
               )}
             </Paper>
             <Paper>
-              {searcAllLabelsValue ? (
-                <PostList
-                  posts={posts.filter(
-                    (post: Post) => post.label === searcAllLabelsValue
-                  )}
-                />
-              ) : selectedUserId ? (
-                <PostList
-                  posts={posts.filter(
-                    (post: Post) => post.userId === selectedUserId
-                  )}
-                />
-              ) : (
-                <PostList posts={posts} />
-              )}
+              <PostList
+                posts={posts.filter((post: Post) =>
+                  debouncedValue
+                    ? post.label
+                        .toLowerCase()
+                        .includes(debouncedValue.toLowerCase())
+                    : selectedUserId
+                    ? post.userId === selectedUserId
+                    : posts
+                )}
+              />
             </Paper>
           </Box>
         </Box>
       </Box>
-      {/* </ReturnDeletedTasksButton> */}
-      {/* </TasksContext.Provider> */}
     </>
   );
 };
